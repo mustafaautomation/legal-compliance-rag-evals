@@ -1,0 +1,6 @@
+{
+  "pipeline_outputs": "Recorded by running the deterministic offline pipeline in this repository.",
+  "judge_scores": null,
+  "judge_scores_status": "not_run",
+  "note": "No OPENAI_API_KEY was available when these snapshots were produced. RAGAS faithfulness, answer relevancy, context precision, and context recall are not stored here. Live mode computes them. Do not treat any number in this folder as an LLM-judge score."
+}

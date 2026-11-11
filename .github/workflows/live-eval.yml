@@ -1,0 +1,30 @@
+name: Live eval
+
+on:
+  workflow_dispatch:
+
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - run: uv sync --frozen --extra dev
+      - name: Check for OPENAI_API_KEY
+        id: key
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          if [ -z "$OPENAI_API_KEY" ]; then
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "OPENAI_API_KEY is not set. Live RAGAS eval was not run."
+          else
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Run live RAGAS eval
+        if: steps.key.outputs.present == 'true'
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: uv run legal-rag-eval --mode live --provider openai
